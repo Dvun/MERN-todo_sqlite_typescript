@@ -44,7 +44,6 @@ exports.findTodoById = async (req, res, next) => {
   }
 }
 
-
 exports.updateTodo = async (req, res) => {
   const userid = req.user.dataValues.id
   const todoId = req.params.id

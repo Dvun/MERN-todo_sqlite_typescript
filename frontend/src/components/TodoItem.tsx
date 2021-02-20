@@ -2,7 +2,9 @@ import React, {FC} from 'react'
 import Paper from '@material-ui/core/Paper'
 import {Typography, Grid} from '@material-ui/core'
 
-const TodoItem: FC = () => {
+const TodoItem: FC = (todo) => {
+
+
   return (
     <Paper elevation={3} style={{display: 'flex', alignItems: 'center', paddingInline: '15px', height: '3.5rem'}}>
       <Grid

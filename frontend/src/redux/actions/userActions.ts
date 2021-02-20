@@ -3,6 +3,10 @@ import {ForgotPassword, LoginData, RegisterData, ResetPasswordData, ResetToken} 
 import {AppDispatch, AppThunk} from '../store'
 import * as consts from '../reducers/users/userSlice'
 
+interface UserId {
+  id: number | null
+}
+
 
 export const registerUser = (data: RegisterData): AppThunk => async (dispatch: AppDispatch) => {
   const config = {
@@ -30,8 +34,10 @@ export const loginUser = (data: LoginData): AppThunk => async (dispatch: AppDisp
 }
 
 export const logoutUser = () => async (dispatch: any) => {
+  // @ts-ignore
+  const {id}: UserId = JSON.parse(localStorage.getItem('user'))
   try {
-    await axios.post('/api/users/logout')
+    await axios.post(`/api/users/logout/${id}`)
     localStorage.removeItem('user')
     dispatch(consts.LOGOUT_USER())
   } catch (e) {

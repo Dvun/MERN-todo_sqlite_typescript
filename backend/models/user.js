@@ -56,6 +56,7 @@ User.prototype.hashAfterRefresh = async (hashPass) => {
   return await bcrypt.hash(hashPass, 11)
 }
 
+
 // Generate and hash password token
 User.prototype.getResetPasswordToken = function () {
   // Generate token

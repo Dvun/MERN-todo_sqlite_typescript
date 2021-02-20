@@ -1,4 +1,4 @@
-import React, {FC} from 'react'
+import React, {FC, useEffect} from 'react'
 import {NavLink} from 'react-router-dom'
 import {makeStyles} from '@material-ui/core/styles'
 import MenuIcon from '@material-ui/icons/Menu'
@@ -29,6 +29,7 @@ const Header: FC = () => {
     dispatch(logoutUser())
   }
 
+
   return (
     <header>
       <AppBar position="static">
@@ -43,7 +44,7 @@ const Header: FC = () => {
               </Link>
             </Typography>
             {
-              user && user.firstName ?
+              user ?
                 <>
                   <Typography style={{textTransform: 'uppercase', color: 'greenyellow'}}>
                     {`Hello, ${user.firstName}`}

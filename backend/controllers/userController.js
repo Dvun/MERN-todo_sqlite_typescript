@@ -2,8 +2,9 @@ const User = require('../models/user')
 const RefreshToken = require('../models/refreshToken')
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
+const jwt = require('jsonwebtoken')
 const sendEmail = require('../utils/sendEmail')
-const {sendTokenCookie, refreshGenerateToken, generatedToken} = require('../middlewares/auth')
+const {refreshGenerateToken, generatedToken} = require('../middlewares/auth')
 
 module.exports = {
 
@@ -37,48 +38,45 @@ module.exports = {
     try {
       const user = await User.findOne({where: {email}})
       if (!user) {
-        return res.status(401).json({success: false, errorMsg: `User with email ${email} not registered!`})
+        return res.status(401).json({errorMsg: `User with email ${email} not registered!`})
       }
       // Password validation
       const validPass = await bcrypt.compare(password, user.password)
       if (!validPass) {
-        return res.status(401).json({success: false, errorMsg: 'Email or password is not correct!'})
-      }
-      // Token generation
-      const token = await generatedToken(user)
-      // Refresh Token generation
-      const refreshToken = await refreshGenerateToken(user)
-      await RefreshToken.create({
-        userId: user.id,
-        createdByIp: ip,
-        refreshToken: refreshToken
-      })
-      // // Send token to cookie
-      // await sendTokenCookie(user, token, refreshToken, res)
-
-      res.status(200).json({
-        success: true,
-        user: {
+        return res.status(401).json({errorMsg: 'Email or password is not correct!'})
+      } else {
+        // Token generation
+        const token = await generatedToken(user)
+        // Send user json
+        res.status(200).json({
           firstName: user.firstName,
           email: user.email,
           id: user.id,
           role: user.role,
-        },
-        token,
-      })
+          token: token,
+        })
+        // RefreshToken generation
+        const refreshToken = await refreshGenerateToken(user)
+        // Decode refreshToken and get user id and expiresIn date
+        const decodeRefreshToken = await jwt.verify(refreshToken, process.env.REFRESH_JWT_SECRET)
+        // save in base refreshToken
+        await RefreshToken.create({
+          userId: decodeRefreshToken.id,
+          expires: decodeRefreshToken.exp,
+          createdByIp: ip,
+          refreshToken: refreshToken,
+        })
+      }
     } catch (e) {
-      console.log(e)
-      res.status(500).json({success: false, errorMsg: 'Server Error!'})
+      res.status(500).json({errorMsg: 'Server Error!'})
     }
   },
 
-// User logout and clear cookies
+// User logout and clear localstorage
   logoutUser: async (req, res) => {
-    res.clearCookie('token', {path: '/'})
-    res.clearCookie('refresh_token', {path: '/'})
     try {
+      await RefreshToken.destroy({where: {userId: req.params.userId}})
       res.status(200).json({
-        success: true,
         user: null,
       })
     } catch (e) {
@@ -231,13 +229,51 @@ module.exports = {
       }, {where: {id: user.dataValues.id}})
       // Token generation
       const token = await generatedToken(user.id)
-      // Send token to cookie
-      await sendTokenCookie(user, token, res)
-      // res.status(200).json({msg: 'User password updated successfully!'})
+      res.status(200).json({msg: 'User password updated successfully!'})
     } catch (e) {
       res.status(500).json({success: false, errorMsg: 'Server Error!'})
     }
-  }
+  },
+
+// User token refresh
+  refreshToken: async function (req, res) {
+    const ip = req.ip
+    const user = req.body
+    try {
+      const refreshToken = await RefreshToken.findOne({where: {userId: user.id}})
+
+      const dateNow = Math.round(Date.now() / 1000)
+      const diff = refreshToken.dataValues.expires - dateNow
+
+      if (diff <= 0) {
+        await refreshToken.destroy(refreshToken)
+        return res.send('Invalid Token!')
+      } else {
+        const token = await generatedToken(user)
+        res.status(201).json({
+          email: user.email,
+          firstName: user.firstName,
+          id: user.id,
+          role: user.role,
+          token
+        })
+        const newRefreshToken = await refreshGenerateToken(user)
+
+        // Decode refreshToken and get user id and expiresIn date
+        const decodeRefreshToken = await jwt.verify(newRefreshToken, process.env.REFRESH_JWT_SECRET)
+
+        await refreshToken.update({
+          userId: user.id,
+          expires: decodeRefreshToken.exp,
+          createdByIp: ip,
+          refreshToken: newRefreshToken,
+        })
+      }
+    } catch (e) {
+      console.log(e)
+      res.status(500).json({errorMsg: 'Server Error!'})
+    }
+  },
 
 }
 
