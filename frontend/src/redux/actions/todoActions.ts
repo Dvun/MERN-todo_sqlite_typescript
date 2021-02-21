@@ -24,19 +24,19 @@ export const getUserTodos = () => async (dispatch: any) => {
 export const createNewTodo = (data: any) => async (dispatch: any) => {
   try {
     await callApi()
+    dispatch(consts.FETCHING_REQUEST(true))
     const res = await axios.post('/api/todos/add', data, options)
-    console.log(res.data)
+    dispatch(consts.ADD_NEW_TODO_BY_USER(res.data))
   } catch (e) {
   }
 }
 
 export const deleteTodo = (id: number) => async (dispatch: any) => {
   try {
-    console.log('first')
     await callApi()
-    console.log('second')
+    dispatch(consts.FETCHING_REQUEST(true))
     const res = await axios.delete(`/api/todos/${id}`, options)
-    console.log(res.data)
+    dispatch(consts.DELETE_TODO_BY_USER(res.data))
   } catch (e) {
   }
 }

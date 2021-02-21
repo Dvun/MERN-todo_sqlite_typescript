@@ -14,8 +14,8 @@ const todoSlice = createSlice({
   name: 'todo',
   initialState,
   reducers: {
-    GET_ALL_USER_TODOS_REQUEST: (state, action: PayloadAction<any>) => {
-      state.success = true
+    FETCHING_REQUEST: (state, action: PayloadAction<any>) => {
+      state.success = action.payload
     },
 
     GET_ALL_USER_TODOS: (state, action: PayloadAction<any>) => {
@@ -24,14 +24,26 @@ const todoSlice = createSlice({
     },
 
     ADD_NEW_TODO_BY_USER: (state, action: PayloadAction<any>) => {
-      state.todos = action.payload
+      state.successMsg = action.payload.msg
     },
+
+    DELETE_TODO_BY_USER: (state, action: PayloadAction<any>) => {
+      state.errorMsg = action.payload.msg
+    },
+
+    CLEAR_MESSAGES_TODOS: (state) => {
+      state.successMsg = null
+      state.errorMsg = null
+    },
+
   },
 })
 
 export default todoSlice.reducer
 export const {
   GET_ALL_USER_TODOS,
-  GET_ALL_USER_TODOS_REQUEST,
-  ADD_NEW_TODO_BY_USER
+  FETCHING_REQUEST,
+  ADD_NEW_TODO_BY_USER,
+  DELETE_TODO_BY_USER,
+  CLEAR_MESSAGES_TODOS
 } = todoSlice.actions

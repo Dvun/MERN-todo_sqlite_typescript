@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -23,6 +23,7 @@ export default function NewTodoModal({open, handleClose}: any) {
   const dispatch = useDispatch()
   const {errors, watch, handleSubmit, register, reset} = useForm()
   const watchFields = watch()
+
 
   const onSubmit = async (data: any) => {
     if (Object.keys(errors).length === 0) {

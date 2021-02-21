@@ -18,6 +18,7 @@ const TodoItem: FC<Todo> = ({id, description, isPublic, createdAt}: Todo) => {
   const {errors, watch, handleSubmit, register} = useForm()
   const watchField = watch()
 
+
   const handleDelete = async (id: number) => {
     await dispatch(deleteTodo(id))
     dispatch(getUserTodos())

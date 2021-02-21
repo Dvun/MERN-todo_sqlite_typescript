@@ -4,17 +4,22 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import {useDispatch, useSelector} from 'react-redux'
 import { RootState } from '../redux/rootState';
 import { CLEAR_MESSAGES } from '../redux/reducers/users/userSlice';
+import { CLEAR_MESSAGES_TODOS } from '../redux/reducers/users/todoSlice';
 
 
 const ToastifyBar: React.FC = () => {
   const dispatch = useDispatch()
   const {errorMsg, successMsg} = useSelector(({userReducer}: RootState) => userReducer)
+  const {errorMsg: todosError, successMsg: todosSuccess}: any = useSelector(({todoReducer}: RootState) => todoReducer)
 
   useEffect(() => {
     if (errorMsg) notifyError(errorMsg)
     if (successMsg) notifySuccess(successMsg)
+
+    if (todosSuccess) notifySuccess(todosSuccess)
+    if (todosError) notifySuccess(todosError)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [errorMsg, successMsg])
+  }, [errorMsg, successMsg, todosSuccess, todosError])
 
 
   const notifySuccess = (successMsg: string) => {
@@ -28,6 +33,7 @@ const ToastifyBar: React.FC = () => {
       progress: undefined,
     });
     setTimeout(() => dispatch(CLEAR_MESSAGES()), 200)
+    setTimeout(() => dispatch(CLEAR_MESSAGES_TODOS()), 200)
   }
 
  const notifyError = (errorMsg: string) => {
@@ -41,6 +47,7 @@ const ToastifyBar: React.FC = () => {
      progress: undefined,
    });
    setTimeout(() => dispatch(CLEAR_MESSAGES()), 200)
+   setTimeout(() => dispatch(CLEAR_MESSAGES_TODOS()), 200)
  }
 
 
