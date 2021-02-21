@@ -21,8 +21,22 @@ export const getUserTodos = () => async (dispatch: any) => {
   }
 }
 
-// export const createNewTodo = () => async (dispatch: any) => {
-//   try {
-//   } catch (e) {
-//   }
-// }
+export const createNewTodo = (data: any) => async (dispatch: any) => {
+  try {
+    await callApi()
+    const res = await axios.post('/api/todos/add', data, options)
+    console.log(res.data)
+  } catch (e) {
+  }
+}
+
+export const deleteTodo = (id: number) => async (dispatch: any) => {
+  try {
+    console.log('first')
+    await callApi()
+    console.log('second')
+    const res = await axios.delete(`/api/todos/${id}`, options)
+    console.log(res.data)
+  } catch (e) {
+  }
+}

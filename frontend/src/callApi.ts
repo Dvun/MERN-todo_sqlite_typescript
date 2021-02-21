@@ -12,7 +12,7 @@ const tokenTimeControl = async (user: any, isTokenValid: boolean) => {
     }
     const res = await axios.post(`/api/users/resetToken`, user, options)
     // @ts-ignore
-    const localUser = JSON.parse(localStorage.getItem('user'))
+    const localUser = await JSON.parse(localStorage.getItem('user'))
     if (res.data.user === null || localUser === null || res.data === 'Invalid Token!') {
       localStorage.removeItem('user')
       return
@@ -20,7 +20,6 @@ const tokenTimeControl = async (user: any, isTokenValid: boolean) => {
     localStorage.removeItem('user')
     localStorage.setItem('user', JSON.stringify(res.data))
   }
-  return
 }
 
 

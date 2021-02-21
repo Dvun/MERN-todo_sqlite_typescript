@@ -236,7 +236,7 @@ module.exports = {
   },
 
 // User token refresh
-  refreshToken: async function (req, res) {
+  refreshToken: async function (req, res, next) {
     const ip = req.ip
     const user = req.body
     try {
@@ -257,6 +257,7 @@ module.exports = {
           role: user.role,
           token
         })
+        next()
         const newRefreshToken = await refreshGenerateToken(user)
 
         // Decode refreshToken and get user id and expiresIn date
@@ -270,7 +271,6 @@ module.exports = {
         })
       }
     } catch (e) {
-      console.log(e)
       res.status(500).json({errorMsg: 'Server Error!'})
     }
   },

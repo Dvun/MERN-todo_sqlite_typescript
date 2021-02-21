@@ -6,6 +6,7 @@ import LoginPopoverInputs from './LoginPopoverInputs'
 import ForgotPasswordInput from './ForgotPasswordInput'
 import TodoItem from './TodoItem'
 import ResetPasswordPage from './ResetPasswordPage'
+import NewTodoModal from './NewTodoModal'
 
 
 
@@ -18,5 +19,6 @@ export {
   LoginPopover,
   LoginPopoverInputs,
   ForgotPasswordInput,
-  ResetPasswordPage
+  ResetPasswordPage,
+  NewTodoModal
 }
