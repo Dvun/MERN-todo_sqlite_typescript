@@ -1,7 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {TodosState} from './todoTypes'
 
-
 const initialState: TodosState = {
   success: false,
   todo: null,
@@ -28,8 +27,11 @@ const todoSlice = createSlice({
     },
 
     DELETE_TODO_BY_USER: (state, action: PayloadAction<any>) => {
+      // @ts-ignore
+      state.todos.filter((item): any => item.id !== action.payload.id)
       state.errorMsg = action.payload.msg
     },
+
 
     CLEAR_MESSAGES_TODOS: (state) => {
       state.successMsg = null

@@ -28,7 +28,7 @@ export default function NewTodoModal({open, handleClose}: any) {
   const onSubmit = async (data: any) => {
     if (Object.keys(errors).length === 0) {
       await dispatch(createNewTodo(data))
-      dispatch(getUserTodos())
+      // dispatch(getUserTodos())
     }
     reset()
     handleClose()

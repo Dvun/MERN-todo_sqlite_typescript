@@ -21,7 +21,7 @@ const TodoItem: FC<Todo> = ({id, description, isPublic, createdAt}: Todo) => {
 
   const handleDelete = async (id: number) => {
     await dispatch(deleteTodo(id))
-    dispatch(getUserTodos())
+    // dispatch(getUserTodos())
   }
 
   const handleEdit = (id: number) => {

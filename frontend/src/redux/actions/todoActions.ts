@@ -1,6 +1,6 @@
 import axios from 'axios'
 import * as consts from '../reducers/users/todoSlice'
-import {callApi} from '../../callApi'
+import {callApi} from '../../utils/callApi'
 
 
 // @ts-ignore
@@ -36,7 +36,7 @@ export const deleteTodo = (id: number) => async (dispatch: any) => {
     await callApi()
     dispatch(consts.FETCHING_REQUEST(true))
     const res = await axios.delete(`/api/todos/${id}`, options)
-    dispatch(consts.DELETE_TODO_BY_USER(res.data))
+    dispatch(consts.DELETE_TODO_BY_USER({id, data: res.data}))
   } catch (e) {
   }
 }
