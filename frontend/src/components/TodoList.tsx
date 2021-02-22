@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {getUserTodos} from '../redux/actions/todoActions'
 import {RootState} from '../redux/rootState'
 import {Todo, TodosState} from '../redux/reducers/users/todoTypes'
+import {StatusCodes} from 'http-status-codes'
 
 
 const TodoList: FC<TodosState> = () => {
@@ -21,6 +22,9 @@ const TodoList: FC<TodosState> = () => {
   useEffect( () => {
       if (success) {
         dispatch(getUserTodos())
+        if (StatusCodes.NOT_MODIFIED) {
+          dispatch(getUserTodos())
+        }
       }
   }, [success, todos])
 

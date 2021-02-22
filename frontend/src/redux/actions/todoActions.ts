@@ -8,7 +8,7 @@ const user = JSON.parse(localStorage.getItem('user'))
 const options = {
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${user && user.token}`,
+    'Authorization': `Bearer ${user && user.token}`
   },
 }
 
