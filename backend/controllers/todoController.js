@@ -47,6 +47,7 @@ exports.findTodoById = async (req, res, next) => {
 exports.updateTodo = async (req, res) => {
   const userid = req.user.dataValues.id
   const todoId = req.params.id
+  console.log(req.body)
   try {
     const todo = await Todo.findOne({where: {id: todoId, userId: userid}})
     if (!todo) {
@@ -59,6 +60,7 @@ exports.updateTodo = async (req, res) => {
     await todo.update(updatedTodo)
     res.status(201).json({msg: 'Todo updated!'})
   } catch (e) {
+    console.log(e)
     res.status(500).json({errorMsg: 'Server Error!'})
   }
 }

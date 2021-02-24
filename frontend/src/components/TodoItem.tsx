@@ -8,7 +8,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import {useForm} from 'react-hook-form'
 import SaveIcon from '@material-ui/icons/Save'
 import {useDispatch} from 'react-redux'
-import {deleteTodo, getUserTodos} from '../redux/actions/todoActions'
+import {deleteTodo, updateTodo} from '../redux/actions/todoActions'
 
 
 const TodoItem: FC<Todo> = ({id, description, isPublic, createdAt}: Todo) => {
@@ -18,10 +18,8 @@ const TodoItem: FC<Todo> = ({id, description, isPublic, createdAt}: Todo) => {
   const {errors, watch, handleSubmit, register} = useForm()
   const watchField = watch()
 
-
   const handleDelete = async (id: number) => {
     await dispatch(deleteTodo(id))
-    // dispatch(getUserTodos())
   }
 
   const handleEdit = (id: number) => {
@@ -30,6 +28,9 @@ const TodoItem: FC<Todo> = ({id, description, isPublic, createdAt}: Todo) => {
 
   const onSubmit = (data: any) => {
     console.log(data)
+    if (Object.keys(errors).length === 0) {
+      dispatch(updateTodo(id, data))
+    }
   }
 
   const handleChange = (check: boolean) => {
@@ -93,8 +94,7 @@ const TodoItem: FC<Todo> = ({id, description, isPublic, createdAt}: Todo) => {
                     </IconButton>
                   </>
                   :
-                  <IconButton className={classes.editButton} component='button' onClick={() => handleEdit(id)}
-                              type='submit'>
+                  <IconButton className={classes.editButton} component='button' onClick={() => handleEdit(id)} type='submit'>
                     <EditIcon fontSize='inherit'/>
                   </IconButton>
                 }

@@ -26,6 +26,11 @@ const todoSlice = createSlice({
       state.successMsg = action.payload.msg
     },
 
+    UPDATE_TODO_BY_USER: (state, action: PayloadAction<any>) => {
+      state.successMsg = action.payload.msg
+      state.success = false
+    },
+
     DELETE_TODO_BY_USER: (state, action: PayloadAction<any>) => {
       // @ts-ignore
       state.todos.filter((item): any => item.id !== action.payload.id)
@@ -47,5 +52,6 @@ export const {
   FETCHING_REQUEST,
   ADD_NEW_TODO_BY_USER,
   DELETE_TODO_BY_USER,
-  CLEAR_MESSAGES_TODOS
+  CLEAR_MESSAGES_TODOS,
+  UPDATE_TODO_BY_USER
 } = todoSlice.actions

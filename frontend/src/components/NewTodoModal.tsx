@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -10,7 +10,7 @@ import {TextField, Box, createStyles, Grid, Checkbox, FormControlLabel} from '@m
 import {makeStyles, Theme} from '@material-ui/core/styles'
 import {useForm} from 'react-hook-form'
 import {useDispatch} from 'react-redux'
-import {createNewTodo, getUserTodos} from '../redux/actions/todoActions'
+import {createNewTodo} from '../redux/actions/todoActions'
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children?: React.ReactElement<any, any> },
