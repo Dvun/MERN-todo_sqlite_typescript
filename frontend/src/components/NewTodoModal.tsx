@@ -6,11 +6,14 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Slide from '@material-ui/core/Slide'
 import {TransitionProps} from '@material-ui/core/transitions'
-import {TextField, Box, createStyles, Grid, Checkbox, FormControlLabel} from '@material-ui/core'
+import {TextField, Box, createStyles, Grid, Checkbox, FormControlLabel, CircularProgress} from '@material-ui/core'
 import {makeStyles, Theme} from '@material-ui/core/styles'
 import {useForm} from 'react-hook-form'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {createNewTodo} from '../redux/actions/todoActions'
+import { green } from '@material-ui/core/colors'
+import clsx from 'clsx';
+import {RootState} from '../redux/rootState'
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -21,18 +24,28 @@ const Transition = React.forwardRef(function Transition(
 
 export default function NewTodoModal({open, handleClose}: any) {
   const dispatch = useDispatch()
+  const classes = useStyles()
+  const [loading, setLoading] = React.useState(false);
+  // const [success, setSuccess] = React.useState(false);
+  const {todos, success}: any = useSelector(({todoReducer}: RootState) => todoReducer)
   const {errors, watch, handleSubmit, register, reset} = useForm()
   const watchFields = watch()
 
 
   const onSubmit = async (data: any) => {
     if (Object.keys(errors).length === 0) {
+      if (!success) {
+
+      }
       await dispatch(createNewTodo(data))
-      // dispatch(getUserTodos())
     }
     reset()
     handleClose()
   }
+
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: success,
+  });
 
   return (
     <Dialog
@@ -71,9 +84,10 @@ export default function NewTodoModal({open, handleClose}: any) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button type='submit' color="primary">
+          <Button type='submit' color="primary" className={buttonClassname} disabled={loading}>
             Add Todo
           </Button>
+          {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
           <Button onClick={handleClose} color="primary">
             Close
           </Button>
@@ -84,5 +98,35 @@ export default function NewTodoModal({open, handleClose}: any) {
 }
 
 const useStyles = makeStyles((theme: Theme) =>
-  createStyles({}),
-)
+  createStyles({
+    root: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    wrapper: {
+      margin: theme.spacing(1),
+      position: 'relative',
+    },
+    buttonSuccess: {
+      backgroundColor: green[500],
+      '&:hover': {
+        backgroundColor: green[700],
+      },
+    },
+    fabProgress: {
+      color: green[500],
+      position: 'absolute',
+      top: -6,
+      left: -6,
+      zIndex: 1,
+    },
+    buttonProgress: {
+      color: green[500],
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      marginTop: -12,
+      marginLeft: -12,
+    },
+  }),
+);

@@ -18,7 +18,7 @@ router.route('/updateUserPassword').put(verifyToken, resetPasswordValidation, er
 router.route('/forgotPassword').post(forgotPassword)
 router.route('/resetPassword/:resettoken').put(resetPasswordValidation, errorValidationMiddleware, resetPassword)
 
-router.route('/resetToken').post(refreshToken)
+router.route('/refreshToken').post(refreshToken)
 
 
 module.exports = router

@@ -241,13 +241,12 @@ module.exports = {
     const user = req.body
     try {
       const refreshToken = await RefreshToken.findOne({where: {userId: user.id}})
-
+      if (!refreshToken) return res.json('Please login!')
       const dateNow = Math.round(Date.now() / 1000)
       const diff = refreshToken.dataValues.expires - dateNow
-
       if (diff <= 0) {
         await refreshToken.destroy(refreshToken)
-        return res.send('Invalid Token!')
+        return res.json('Please login!')
       } else {
         const token = await generatedToken(user)
         res.status(201).json({
@@ -271,6 +270,7 @@ module.exports = {
         })
       }
     } catch (e) {
+      console.log(e)
       res.status(500).json({errorMsg: 'Server Error!'})
     }
   },

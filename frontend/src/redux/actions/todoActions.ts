@@ -16,8 +16,8 @@ async function getTokenFromLocalStorage () {
 
 export const getUserTodos = () => async (dispatch: any) => {
   try {
-    const options = await getTokenFromLocalStorage()
     await callApi()
+    const options = await getTokenFromLocalStorage()
     const res = await axios.get('/api/todos', options)
     dispatch(consts.GET_ALL_USER_TODOS(res.data))
   } catch (e) {
@@ -27,10 +27,10 @@ export const getUserTodos = () => async (dispatch: any) => {
 export const createNewTodo = (data: any) => async (dispatch: any) => {
   try {
     const options = await getTokenFromLocalStorage()
-    await callApi()
     dispatch(consts.FETCHING_REQUEST(true))
     const res = await axios.post('/api/todos/add', data, options)
-    dispatch(consts.ADD_NEW_TODO_BY_USER(res.data))
+    await dispatch(consts.ADD_NEW_TODO_BY_USER(res.data))
+    await dispatch(getUserTodos())
   } catch (e) {
   }
 }
@@ -38,10 +38,10 @@ export const createNewTodo = (data: any) => async (dispatch: any) => {
 export const deleteTodo = (id: number) => async (dispatch: any) => {
   try {
     const options = await getTokenFromLocalStorage()
-    await callApi()
     dispatch(consts.FETCHING_REQUEST(true))
     const res = await axios.delete(`/api/todos/${id}`, options)
-    dispatch(consts.DELETE_TODO_BY_USER({id, data: res.data}))
+    await dispatch(consts.DELETE_TODO_BY_USER({id, data: res.data}))
+    await dispatch(getUserTodos())
   } catch (e) {
   }
 }
@@ -49,10 +49,10 @@ export const deleteTodo = (id: number) => async (dispatch: any) => {
 export const updateTodo = (id: number, data: any) => async (dispatch: any) => {
   try {
     const options = await getTokenFromLocalStorage()
-    await callApi()
     dispatch(consts.FETCHING_REQUEST(true))
     const res = await axios.put(`/api/todos/${id}`, data, options)
-    dispatch(consts.UPDATE_TODO_BY_USER(res.data))
+    await dispatch(consts.UPDATE_TODO_BY_USER(res.data))
+    await dispatch(getUserTodos())
   } catch (e) {
   }
 }
