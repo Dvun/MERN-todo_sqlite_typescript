@@ -12,11 +12,14 @@ import {Todo, TodosState} from '../redux/reducers/users/todoTypes'
 const TodoList: FC<TodosState> = () => {
   const dispatch = useDispatch()
   const [open, setOpen] = React.useState(false)
+  const {user}: any = useSelector(({userReducer}: RootState) => userReducer)
   const {todos}: any = useSelector(({todoReducer}: RootState) => todoReducer)
 
   useEffect(() => {
-    dispatch(getUserTodos())
-  }, [])
+    if (user) {
+      dispatch(getUserTodos())
+    }
+  }, [dispatch, user])
 
   const handleClickOpen = () => {
     setOpen(true)

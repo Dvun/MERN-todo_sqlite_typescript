@@ -10,7 +10,7 @@ const userFromStorage: User = localStorage.getItem('user') ?
 const initialState: UsersState = {
   user: userFromStorage,
   successMsg: null,
-  errorMsg: null,
+  errorMsg: null
 }
 
 const userSlice = createSlice({

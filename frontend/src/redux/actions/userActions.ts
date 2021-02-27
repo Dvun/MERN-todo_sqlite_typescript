@@ -7,7 +7,6 @@ interface UserId {
   id: number | null
 }
 
-
 export const registerUser = (data: RegisterData): AppThunk => async (dispatch: AppDispatch) => {
   const config = {
     headers: {'Content-Type': 'application/json'},
@@ -26,8 +25,9 @@ export const loginUser = (data: LoginData): AppThunk => async (dispatch: AppDisp
   }
   try {
     const res = await axios.post('/api/users/login', data, config)
-    dispatch(consts.LOGIN_USER(res.data))
-    localStorage.setItem('user', JSON.stringify(res.data))
+    dispatch(consts.LOGIN_USER(res.data.user))
+    localStorage.setItem('user', JSON.stringify(res.data.user))
+    localStorage.setItem('token', JSON.stringify(res.data.token))
   } catch (e) {
     dispatch(consts.LOGIN_FAIL(e.response.data.errorMsg))
   }
@@ -39,6 +39,7 @@ export const logoutUser = () => async (dispatch: any) => {
   try {
     await axios.post(`/api/users/logout/${id}`)
     localStorage.removeItem('user')
+    localStorage.removeItem('token')
     dispatch(consts.LOGOUT_USER())
   } catch (e) {
 

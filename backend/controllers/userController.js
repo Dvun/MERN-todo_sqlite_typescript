@@ -49,10 +49,12 @@ module.exports = {
         const token = await generatedToken(user)
         // Send user json
         res.status(200).json({
-          firstName: user.firstName,
-          email: user.email,
-          id: user.id,
-          role: user.role,
+          user: {
+            firstName: user.firstName,
+            email: user.email,
+            id: user.id,
+            role: user.role
+          },
           token: token,
         })
         // RefreshToken generation

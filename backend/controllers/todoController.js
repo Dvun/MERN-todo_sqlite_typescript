@@ -25,6 +25,7 @@ exports.newTodo = async (req, res) => {
     })
     res.status(201).json({msg: 'Todo created!'})
   } catch (e) {
+    console.log(e)
     res.status(500).json({errorMsg: 'Server Error!'})
   }
 }
