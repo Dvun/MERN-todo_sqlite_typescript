@@ -7,6 +7,7 @@ import {LoginPopover} from './index'
 import {useDispatch, useSelector} from 'react-redux'
 import {logoutUser} from '../redux/actions/userActions'
 import {RootState} from '../redux/rootState'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 
 const Header: FC = () => {
@@ -46,10 +47,10 @@ const Header: FC = () => {
             {
               user ?
                 <>
-                  <Typography style={{textTransform: 'uppercase', color: 'greenyellow'}}>
+                  <Typography style={{textTransform: 'uppercase', color: 'greenyellow', marginRight: '1rem'}}>
                     {`Hello, ${user.firstName}`}
                   </Typography>
-                  <Button component={NavLink} to='/logout' color="inherit" onClick={handleLogout}>
+                  <Button startIcon={<ExitToAppIcon/>} component={NavLink} to='/logout' color="inherit" onClick={handleLogout}>
                     Logout
                   </Button>
                 </>

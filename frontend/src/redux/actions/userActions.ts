@@ -25,9 +25,9 @@ export const loginUser = (data: LoginData): AppThunk => async (dispatch: AppDisp
   }
   try {
     const res = await axios.post('/api/users/login', data, config)
-    dispatch(consts.LOGIN_USER(res.data.user))
-    localStorage.setItem('user', JSON.stringify(res.data.user))
     localStorage.setItem('token', JSON.stringify(res.data.token))
+    localStorage.setItem('user', JSON.stringify(res.data.user))
+    dispatch(consts.LOGIN_USER(res.data.user))
   } catch (e) {
     dispatch(consts.LOGIN_FAIL(e.response.data.errorMsg))
   }

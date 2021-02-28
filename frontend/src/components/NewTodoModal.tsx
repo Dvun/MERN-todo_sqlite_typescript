@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -11,8 +11,8 @@ import {makeStyles, Theme} from '@material-ui/core/styles'
 import {useForm} from 'react-hook-form'
 import {useDispatch, useSelector} from 'react-redux'
 import {createNewTodo} from '../redux/actions/todoActions'
-import { green } from '@material-ui/core/colors'
-import clsx from 'clsx';
+import {green} from '@material-ui/core/colors'
+import clsx from 'clsx'
 import {RootState} from '../redux/rootState'
 
 const Transition = React.forwardRef(function Transition(
@@ -25,27 +25,28 @@ const Transition = React.forwardRef(function Transition(
 export default function NewTodoModal({open, handleClose}: any) {
   const dispatch = useDispatch()
   const classes = useStyles()
-  const [loading, setLoading] = React.useState(false);
-  // const [success, setSuccess] = React.useState(false);
-  const {todos, success}: any = useSelector(({todoReducer}: RootState) => todoReducer)
+  const [loading, setLoading] = React.useState(false)
+  const {success}: any = useSelector(({todoReducer}: RootState) => todoReducer)
   const {errors, watch, handleSubmit, register, reset} = useForm()
   const watchFields = watch()
 
 
   const onSubmit = async (data: any) => {
     if (Object.keys(errors).length === 0) {
-      if (!success) {
-
-      }
       await dispatch(createNewTodo(data))
+      if (success) {
+        setLoading(true)
+      } else {
+        setLoading(false)
+        handleClose()
+      }
     }
     reset()
-    handleClose()
   }
 
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
-  });
+  })
 
   return (
     <Dialog
@@ -86,8 +87,8 @@ export default function NewTodoModal({open, handleClose}: any) {
         <DialogActions>
           <Button type='submit' color="primary" className={buttonClassname} disabled={loading}>
             Add Todo
+            {loading && <CircularProgress size={24} className={classes.buttonProgress}/>}
           </Button>
-          {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
           <Button onClick={handleClose} color="primary">
             Close
           </Button>
@@ -129,4 +130,4 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: -12,
     },
   }),
-);
+)

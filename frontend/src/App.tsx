@@ -14,7 +14,7 @@ const App: FC = () => {
     <>
       <Header/>
       <section style={{backgroundColor: 'gainsboro'}}>
-        <Container maxWidth='md' style={{paddingTop: '5rem'}}>
+        <Container maxWidth='md' style={{paddingTop: '3rem'}}>
           <Routes/>
         </Container>
       </section>

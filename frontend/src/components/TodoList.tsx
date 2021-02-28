@@ -16,10 +16,8 @@ const TodoList: FC<TodosState> = () => {
   const {todos}: any = useSelector(({todoReducer}: RootState) => todoReducer)
 
   useEffect(() => {
-    if (user) {
-      dispatch(getUserTodos())
-    }
-  }, [dispatch, user])
+    dispatch(getUserTodos())
+  }, [])
 
   const handleClickOpen = () => {
     setOpen(true)

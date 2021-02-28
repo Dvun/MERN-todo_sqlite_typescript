@@ -25,7 +25,6 @@ exports.newTodo = async (req, res) => {
     })
     res.status(201).json({msg: 'Todo created!'})
   } catch (e) {
-    console.log(e)
     res.status(500).json({errorMsg: 'Server Error!'})
   }
 }
@@ -50,15 +49,14 @@ exports.updateTodo = async (req, res) => {
   const todoId = req.params.id
   console.log(req.body)
   try {
-    const todo = await Todo.findOne({where: {id: todoId, userId: userid}})
+    let todo = await Todo.findOne({where: {id: todoId, userId: userid}})
     if (!todo) {
       return res.status(404).json({errorMsg: 'Todo not found!'})
     }
-    const updatedTodo = {
-      description: req.body.description || req.body.todo.description,
-      isPublic: req.body.isPublic || req.body.todo.isPublic
-    }
-    await todo.update(updatedTodo)
+    await todo.update({
+      description: req.body.description,
+      isPublic: req.body.isPublic
+    }, {where: {id: todoId, userId: userid}})
     res.status(201).json({msg: 'Todo updated!'})
   } catch (e) {
     console.log(e)
