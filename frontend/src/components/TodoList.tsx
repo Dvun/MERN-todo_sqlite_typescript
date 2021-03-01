@@ -12,7 +12,6 @@ import {Todo, TodosState} from '../redux/reducers/users/todoTypes'
 const TodoList: FC<TodosState> = () => {
   const dispatch = useDispatch()
   const [open, setOpen] = React.useState(false)
-  const {user}: any = useSelector(({userReducer}: RootState) => userReducer)
   const {todos}: any = useSelector(({todoReducer}: RootState) => todoReducer)
 
   useEffect(() => {
@@ -32,7 +31,8 @@ const TodoList: FC<TodosState> = () => {
       </Box>
       <Box component='div' marginTop={3}>
         {todos.map((todo: Todo) => (
-          <TodoItem key={todo.id} {...todo} />
+          // @ts-ignore
+          <TodoItem key={todo.id} {...todo}/>
         ))}
       </Box>
 

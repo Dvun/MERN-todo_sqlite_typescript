@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react'
+import React, {FC, useCallback, useState} from 'react'
 import Paper from '@material-ui/core/Paper'
 import {
   Typography,
@@ -40,16 +40,9 @@ const TodoItem: FC<Todo> = ({id, description, isPublic, createdAt}: Todo) => {
     }
   }
 
-  document.addEventListener('keypress', (e) => {
-    if (editMode && e.key === 'Enter') {
-      setEditMode(!editMode)
-    }
-  })
-
-  console.log(editMode)
-
   return (
     <Paper elevation={3} className={classes.paper}>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid
           container
@@ -113,14 +106,13 @@ const TodoItem: FC<Todo> = ({id, description, isPublic, createdAt}: Todo) => {
               <Grid item>
                 {
                   !editMode ?
-                    <IconButton className={classes.editButton} onClick={() => setEditMode(!editMode)}>
+                    <IconButton className={classes.editButton} onClick={() => setEditMode(!editMode)} type='submit'>
                       <EditIcon fontSize='inherit'/>
                     </IconButton>
                     :
                     <IconButton color='primary' onClick={() => setEditMode(!editMode)} type='submit'>
                       <SaveIcon fontSize='inherit'/>
                     </IconButton>
-
                 }
               </Grid>
 
@@ -134,6 +126,7 @@ const TodoItem: FC<Todo> = ({id, description, isPublic, createdAt}: Todo) => {
           </Grid>
         </Grid>
       </form>
+
     </Paper>
   )
 }
