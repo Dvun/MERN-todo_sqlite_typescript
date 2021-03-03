@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react'
+import React, {FC} from 'react'
 import {NavLink} from 'react-router-dom'
 import {makeStyles} from '@material-ui/core/styles'
 import MenuIcon from '@material-ui/icons/Menu'

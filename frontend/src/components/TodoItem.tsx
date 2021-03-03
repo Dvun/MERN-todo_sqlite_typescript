@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useState, useRef, useEffect} from 'react'
+import React, {useState} from 'react'
 import Paper from '@material-ui/core/Paper'
 import {
   Typography,

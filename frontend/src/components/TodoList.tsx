@@ -16,6 +16,7 @@ const TodoList: FC<TodosState> = () => {
 
   useEffect(() => {
     dispatch(getUserTodos())
+    // eslint-disable-next-line
   }, [])
 
   const handleClickOpen = () => {
