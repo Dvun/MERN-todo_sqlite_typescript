@@ -1,14 +1,27 @@
 import jwtDecode from 'jwt-decode'
 import axios from 'axios'
-import {response} from 'express'
 
 async function logoutUserIfNoToken(id: number) {
   localStorage.removeItem('user')
   await axios.post(`/api/users/logout/${id}`)
 }
 
+const refreshToken = async (user: any) => {
+  const options = {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  }
+  try {
+    return await axios.post('/api/users/refreshToken', user, options)
+  } catch (e) {
+    console.log(e)
+  }
+}
 
-export const callApi = async (url: any, method: any, data: any | null) => {
+
+export async function callApi (url: any, method: any, data: any | null) {
 
   // @ts-ignore
   let user = JSON.parse(localStorage.getItem('user'))
@@ -30,27 +43,23 @@ export const callApi = async (url: any, method: any, data: any | null) => {
   const diff = tokenData.exp - currentData
 
   console.log(diff)
-  if (diff < 60) {
-    const res = await axios.post('/api/users/refreshToken', user, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-    localStorage.removeItem('token')
-    localStorage.setItem('token', res.data)
-    token = await res.data
-  }
+  if (diff > 60) {
+    const newToken: any = await refreshToken(user)
 
+    localStorage.removeItem('token')
+    localStorage.setItem('token', newToken.data)
+    token = newToken.data
+  }
+  console.log(token.data)
 
   return axios({
-    url: url,
+    url,
     method,
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    data: data,
+    data
   })
 }

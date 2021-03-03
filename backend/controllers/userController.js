@@ -53,7 +53,7 @@ module.exports = {
             firstName: user.firstName,
             email: user.email,
             id: user.id,
-            role: user.role
+            role: user.role,
           },
           token: token,
         })
@@ -263,9 +263,9 @@ module.exports = {
           createdByIp: ip,
           refreshToken: newRefreshToken,
         })
+        next()
       }
     } catch (e) {
-      console.log(e)
       res.status(500).json({errorMsg: 'Server Error!'})
     }
   },
