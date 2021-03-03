@@ -1,9 +1,10 @@
 import jwtDecode from 'jwt-decode'
 import axios from 'axios'
 
-async function logoutUserIfNoToken(id: number) {
-  localStorage.removeItem('user')
+async function logoutUserIfTokenProblem (id: number) {
   await axios.post(`/api/users/logout/${id}`)
+  localStorage.removeItem('user')
+  localStorage.removeItem('token')
 }
 
 const refreshToken = async (user: any) => {
@@ -16,41 +17,36 @@ const refreshToken = async (user: any) => {
   try {
     return await axios.post('/api/users/refreshToken', user, options)
   } catch (e) {
-    console.log(e)
+    await logoutUserIfTokenProblem(user.id)
   }
 }
 
-
 export async function callApi (url: any, method: any, data: any | null) {
-
   // @ts-ignore
   let user = JSON.parse(localStorage.getItem('user'))
   // @ts-ignore
-  let token = await JSON.parse(localStorage.getItem('token'))
+  let token = JSON.parse(localStorage.getItem('token'))
   let tokenData: any
 
   try {
     if (token) {
       tokenData = await jwtDecode(token)
     } else {
-      await logoutUserIfNoToken(user.id)
+      await logoutUserIfTokenProblem(user.id)
     }
   } catch (e) {
-    console.log(e)
+    await logoutUserIfTokenProblem(user.id)
   }
 
   const currentData = Math.round(Date.now() / 1000)
   const diff = tokenData.exp - currentData
 
-  console.log(diff)
   if (diff > 60) {
     const newToken: any = await refreshToken(user)
 
-    localStorage.removeItem('token')
-    localStorage.setItem('token', newToken.data)
+    localStorage.setItem('token', JSON.stringify(newToken.data))
     token = newToken.data
   }
-  console.log(token.data)
 
   return axios({
     url,

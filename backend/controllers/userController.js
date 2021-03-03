@@ -246,9 +246,10 @@ module.exports = {
       if (!refreshToken) return res.json('Please login!')
       const dateNow = Math.round(Date.now() / 1000)
       const diff = refreshToken.dataValues.expires - dateNow
+      console.log(diff)
       if (diff <= 0) {
         await refreshToken.destroy(refreshToken)
-        return res.json('Please login!')
+        return await this.logoutUser()
       } else {
         const token = await generatedToken(user)
         res.status(201).json(token)

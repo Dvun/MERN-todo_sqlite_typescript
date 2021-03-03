@@ -1,6 +1,18 @@
 const Todo = require('../models/todo')
 
 
+exports.findAllPublicTodos = async (req, res) => {
+  try {
+    const todos = await Todo.findAll({where: {isPublic: true}})
+    if (!todos) {
+      return res.status(404).json({errorMsg: `Todos not found`})
+    }
+    res.json(todos)
+  } catch (e) {
+    res.status(500).json({errorMsg: 'Server Error!'})
+  }
+}
+
 exports.findAllTodosByUser = async (req, res) => {
   const {id} = req.user.dataValues
   try {
