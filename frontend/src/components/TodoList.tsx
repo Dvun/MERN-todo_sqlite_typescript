@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react'
+import React, {FC, useEffect, useState} from 'react'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital'
@@ -11,8 +11,8 @@ import {Todo, TodosState} from '../redux/reducers/users/todoTypes'
 
 const TodoList: FC<TodosState> = () => {
   const dispatch = useDispatch()
-  const [open, setOpen] = React.useState(false)
-  const {todos}: any = useSelector(({todoReducer}: RootState) => todoReducer)
+  const [open, setOpen] = useState(false)
+  const {todos, success}: any = useSelector(({todoReducer}: RootState) => todoReducer)
 
   useEffect(() => {
     dispatch(getUserTodos())
@@ -32,7 +32,7 @@ const TodoList: FC<TodosState> = () => {
       <Box component='div' marginTop={3}>
         {todos.map((todo: Todo) => (
           // @ts-ignore
-          <TodoItem key={todo.id} {...todo}/>
+          <TodoItem key={todo.id} {...todo} success={success}/>
         ))}
       </Box>
 

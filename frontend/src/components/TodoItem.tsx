@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useState} from 'react'
+import React, {FC, useCallback, useState, useRef, useEffect} from 'react'
 import Paper from '@material-ui/core/Paper'
 import {
   Typography,
@@ -18,11 +18,11 @@ import {useDispatch} from 'react-redux'
 import {deleteTodo, updateTodo} from '../redux/actions/todoActions'
 
 
-const TodoItem: FC<Todo> = ({id, description, isPublic, createdAt}: Todo) => {
+const TodoItem = ({id, description, isPublic, createdAt}: Todo, {success}: any) => {
   const dispatch = useDispatch()
   const classes = useStyles()
-  const {errors, watch, handleSubmit, register, control} = useForm()
   const [editMode, setEditMode] = useState(false)
+  const {errors, watch, handleSubmit, register, control} = useForm()
   const watchField = watch()
 
   const handleDelete = async (id: number) => {
@@ -32,8 +32,8 @@ const TodoItem: FC<Todo> = ({id, description, isPublic, createdAt}: Todo) => {
   const onSubmit = (data: any) => {
     console.log(data)
     const formData = {
-      description: data.description || description,
-      isPublic: data.isPublic || isPublic,
+      description: data.description,
+      isPublic: data.isPublic,
     }
     if (Object.keys(errors).length === 0) {
       dispatch(updateTodo(id, formData))
@@ -58,46 +58,41 @@ const TodoItem: FC<Todo> = ({id, description, isPublic, createdAt}: Todo) => {
               </Grid>
               <Grid item>
 
-                {editMode &&
-                <>
-                  <label htmlFor="isPublic">Public</label>
-                  <Controller
-                    name="isPublic"
-                    control={control}
-                    defaultValue={isPublic}
-                    rules={{required: true}}
-                    inputRef={register}
-                    render={props =>
-                      <Checkbox
-                        onChange={e => props.onChange(e.target.checked)}
-                        checked={props.value}
-                      />
-                    }
-                  />
-                </>
-                }
+                <label htmlFor="isPublic" className={`${!editMode ? classes.hidden : ''}`}>Public</label>
+                <Controller
+                  name="isPublic"
+                  control={control}
+                  defaultValue={isPublic}
+                  inputRef={register}
+                  render={props =>
+                    <Checkbox
+                      className={`${!editMode ? classes.hidden : ''}`}
+                      onChange={e => props.onChange(e.target.checked)}
+                      checked={props.value}
+                    />
+                  }
+                />
+                {isPublic && <Typography className={`${editMode ? classes.hidden : ''}`}><b>Published</b></Typography>}
 
               </Grid>
             </Grid>
           </Grid>
 
           <Grid item md={8}>
-            {editMode ?
-              <>
-                {watchField &&
-                <TextField
-                  className={classes.descriptionInput}
-                  fullWidth
-                  name='description'
-                  defaultValue={description}
-                  inputRef={register({required: true})}
-                />
-                }
-                {errors.description && <span style={{color: 'darkred'}}>Field can not be empty!</span>}
-              </>
-              :
-              <Typography>{description}</Typography>
+
+            {watchField &&
+            <TextField
+              className={`${classes.descriptionInput} ${(!editMode) ? classes.hidden : ''}`}
+              fullWidth
+              name='description'
+              defaultValue={description}
+              inputRef={register({required: true})}
+            />
             }
+            {errors.description && <span style={{color: 'darkred'}}>Field can not be empty!</span>}
+
+            <Typography className={`${(editMode) ? classes.hidden : ''}`}>{success ? 'Loading...' : description}</Typography>
+
           </Grid>
 
           <Grid item md={2}>
@@ -106,11 +101,13 @@ const TodoItem: FC<Todo> = ({id, description, isPublic, createdAt}: Todo) => {
               <Grid item>
                 {
                   !editMode ?
-                    <IconButton className={classes.editButton} onClick={() => setEditMode(!editMode)} type='submit'>
+                    <IconButton className={classes.editButton} onClick={() => setEditMode(true)} type='submit'>
                       <EditIcon fontSize='inherit'/>
                     </IconButton>
                     :
-                    <IconButton color='primary' onClick={() => setEditMode(!editMode)} type='submit'>
+                    <IconButton color='primary' onClick={() => {
+                      setEditMode(false)
+                    }} type='button'>
                       <SaveIcon fontSize='inherit'/>
                     </IconButton>
                 }
@@ -145,6 +142,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     descriptionInput: {
       padding: '5px 5px 5px 5px',
+    },
+    hidden: {
+      position: 'fixed',
+      visibility: 'hidden',
     },
   }),
 )

@@ -251,14 +251,7 @@ module.exports = {
         return res.json('Please login!')
       } else {
         const token = await generatedToken(user)
-        res.status(201).json({
-          email: user.email,
-          firstName: user.firstName,
-          id: user.id,
-          role: user.role,
-          token
-        })
-        next()
+        res.status(201).json(token)
         const newRefreshToken = await refreshGenerateToken(user)
 
         // Decode refreshToken and get user id and expiresIn date
